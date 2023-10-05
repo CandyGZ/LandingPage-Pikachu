@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Website</title>
+
+  
+  <style>
+    body {
+      background-image: url("https://cdn.wallpapersafari.com/39/94/qBP3Q1.jpg");
+      background-repeat: repeat;
+      background-size: auto;
+    }
+    .ball {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background-color: rgb(22, 121, 214);
+      position: absolute;
+    }
+    .ball {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Pokebola-pokeball-png-0.png/601px-Pokebola-pokeball-png-0.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+    @keyframes fall {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(0, -100px);
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="balls">
+    <div class="ball" id="ball1"></div>
+    <div class="ball" id="ball2"></div>
+    <div class="ball" id="ball3"></div>
+    <div class="ball" id="ball4"></div>
+  </div>
+
+  <script>
+    const balls = document.querySelectorAll('.ball');
+    const animationSpeed = 1; // Velocidad de animación, puedes ajustarla según tus preferencias
+    const gravity = 0.4; // Gravedad, controla la velocidad de caída
+    const bounceFactor = -0.8; // Factor de rebote elástico
+
+    // Detectar el clic del mouse
+// Detectar el clic del mouse
+const handleMouseDown = (e) => {
+  // Detener la animación
+  cancelAnimationFrame(animateId);
+
+  // Iniciar la animación
+  const ball = e.target;
+  const x = e.clientX;
+  const y = e.clientY;
+
+  ball.style.left = x + 'px';
+  ball.style.top = y + 'px';
+
+  // Crear una nueva función para mover la bola
+  const handleMouseMove = (e) => {
+    // Cambiar la posición de la bola
+    ball.style.left = e.clientX + 'px';
+    ball.style.top = e.clientY + 'px';
+  };
+
+  // Escuchar el evento mousemove
+  document.addEventListener('mousemove', handleMouseMove);
+};
+
+// Escuchar el evento mousedown
+for (const ball of balls) {
+  ball.addEventListener('mousedown', handleMouseDown);
+}
+
+
+
+    balls.forEach((ball) => {
+
+        // Ancho y alto aleatorios
+    let width = Math.floor(Math.random() * (350 - 200) + 200);
+    let height = Math.floor(Math.random() * (350 - 200) + 200);
+      
+      // Generar un color aleatorio en formato hexadecimal
+      //const randomColor = "#" + Math.floor(Math.random()*16777215).toString(16);
+      const randomColor = "#" +
+      Math.floor(Math.random() * (255 - 100) + 100).toString(16) +
+      Math.floor(Math.random() * (255 - 100) + 100).toString(16) +
+      Math.floor(Math.random() * (255 - 100) + 100).toString(16);
+
+      // Aplicar el color aleatorio a la bola
+      ball.style.backgroundColor = randomColor;
+
+      // Posición vertical inicial aleatoria
+      let topPosition = -4;
+
+      // Posición horizontal inicial aleatoria
+      let leftPosition = Math.random() * window.innerWidth;
+
+      let ySpeed = 1; // Velocidad vertical inicial
+      topPosition += ySpeed * animationSpeed
+      
+      let shouldAnimate = true;
+
+      const animateBall = () => {
+        // Aplicar gravedad
+        if (!shouldAnimate) return; // detener la animación después de rebotar
+        ySpeed += gravity;
+        topPosition += ySpeed * animationSpeed;
+
+        // Rebotar en la parte inferior
+        if (topPosition >= window.innerHeight - ball.clientHeight) {
+          // Invertir la velocidad y aplicar el factor de rebote elástico
+          ySpeed *= bounceFactor;
+
+          // Asegurarse de que la bola no se hunda en el suelo
+          topPosition = window.innerHeight - ball.clientHeight;
+
+          // Si la velocidad es muy baja y la bola está cerca del suelo, detener la animación
+          if (Math.abs(ySpeed) < 0.01 && topPosition >= window.innerHeight - ball.clientHeight) {
+            shouldAnimate = false;
+            ySpeed = 0; // Establecer la velocidad vertical a cero
+          }
+        }
+
+        // Asignar la nueva posición
+        ball.style.top = topPosition + 'px';
+        ball.style.left = leftPosition + 'px';
+
+        // Detener la animación cuando la bola llega al suelo y la velocidad es casi cero
+        if (!shouldAnimate) return;
+        console.log(ySpeed); 
+        console.log(shouldAnimate);
+        console.log(topPosition);
+        console.log(window.innerHeight);
+        console.log(ball.clientHeight);
+        
+        // Detener la animación cuando la bola llega al suelo y la velocidad es casi cero
+        if (topPosition >= window.innerHeight - ball.clientHeight  && Math.abs(ySpeed) < 0.1) {
+          shouldAnimate = false;
+          //cancelAnimationFrame(animateId);
+        } else {
+          animateId = requestAnimationFrame(animateBall);
+        }
+      };
+
+      // Iniciar la animación
+      let animateId = requestAnimationFrame(animateBall);
+    });
+
+
+    
+  </script>
+</body>
+</html>
